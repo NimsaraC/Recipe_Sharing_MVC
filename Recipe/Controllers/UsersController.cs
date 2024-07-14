@@ -31,6 +31,7 @@ namespace Recipe.Controllers
             {
                 return NotFound();
             }
+            var recipe = GetRecipeIdAsync(id);
 
             var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -39,7 +40,19 @@ namespace Recipe.Controllers
                 return NotFound();
             }
 
-            return View(user);
+            var userDashboard = new UserDash
+            {
+                User = user,
+                recipeMs = recipe
+            };
+
+            return View(userDashboard);
+        }
+
+
+        public IEnumerable<RecipeM> GetRecipeIdAsync(int? id)
+        {
+            return _context.Recipes.Where(r => r.UserId == id).ToList();
         }
 
         // GET: Users/Create

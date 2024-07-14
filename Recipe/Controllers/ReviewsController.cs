@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Recipe.Models;
 
 namespace Recipe.Controllers
@@ -31,6 +32,7 @@ namespace Recipe.Controllers
             {
                 return NotFound();
             }
+            
 
             var review = await _context.Reviews
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -38,9 +40,11 @@ namespace Recipe.Controllers
             {
                 return NotFound();
             }
-
+            
             return View(review);
         }
+
+       
 
         // GET: Reviews/Create
         public IActionResult Create()
