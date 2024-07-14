@@ -31,17 +31,29 @@ namespace Recipe.Controllers
             {
                 return NotFound();
             }
-            
+            var review = GetReviewIdAsync(id);
 
-            var recipeM = await _context.Recipes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var recipeM = await _context.Recipes.FirstOrDefaultAsync(m => m.Id == id);
             if (recipeM == null)
             {
                 return NotFound();
             }
 
-            return View(recipeM);
+            var viewModel = new RecipeDetails
+            {
+                RecipeM = recipeM,
+                Reviews = review,
+                Review = new Review { RecipeId = recipeM.Id }
+            };
+
+            return View(viewModel);
         }
+
+        public IEnumerable<Review> GetReviewIdAsync(int? id)
+        {
+            return _context.Reviews.Where(r => r.RecipeId == id).ToList();
+        }
+
 
         // GET: RecipeMs/Create
         public IActionResult Create()
@@ -153,5 +165,34 @@ namespace Recipe.Controllers
         {
             return _context.Recipes.Any(e => e.Id == id);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateReview([Bind("Id,Comment,RecipeId,UserId")] Review review)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(review);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", new { id = review.RecipeId });
+            }
+
+            // If the model state is invalid, re-fetch the associated recipe and return to the details view with the original view model
+            var recipeM = await _context.Recipes.FirstOrDefaultAsync(m => m.Id == review.RecipeId);
+            if (recipeM == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new RecipeDetails
+            {
+                RecipeM = recipeM,
+                Review = review
+            };
+
+            return View("Details", viewModel);
+        }
+
+
     }
 }

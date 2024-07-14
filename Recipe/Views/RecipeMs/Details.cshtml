@@ -1,4 +1,4 @@
-﻿@model Recipe.Models.RecipeM
+﻿@model Recipe.Models.RecipeDetails
 
 @{
     ViewData["Title"] = "Details";
@@ -11,51 +11,114 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.RecipeM.Title)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
+            @Html.DisplayFor(model => model.RecipeM.Title)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.RecipeM.Description)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.RecipeM.Description)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ingredients)
+            @Html.DisplayNameFor(model => model.RecipeM.Ingredients)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ingredients)
+            @Html.DisplayFor(model => model.RecipeM.Ingredients)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Steps)
+            @Html.DisplayNameFor(model => model.RecipeM.Steps)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Steps)
+            @Html.DisplayFor(model => model.RecipeM.Steps)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CookingTime)
+            @Html.DisplayNameFor(model => model.RecipeM.CookingTime)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CookingTime)
+            @Html.DisplayFor(model => model.RecipeM.CookingTime)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
+            @Html.DisplayNameFor(model => model.RecipeM.Category)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category)
+            @Html.DisplayFor(model => model.RecipeM.Category)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserId)
+            @Html.DisplayNameFor(model => model.RecipeM.UserId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
+            @Html.DisplayFor(model => model.RecipeM.UserId)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.RecipeM.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateReview">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Review.Comment" class="control-label"></label>
+                <textarea cols="30" rows="10" asp-for="Review.Comment" class="form-control"></textarea>
+                <span asp-validation-for="Review.Comment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecipeM.Title" class="control-label"></label>
+                <input asp-for="RecipeM.Title" class="form-control" disabled/>
+            </div>
+            <div class="form-group">
+                <label asp-for="Review.RecipeId" class="control-label" hidden></label>
+                <input asp-for="Review.RecipeId" class="form-control" hidden/>
+                <span asp-validation-for="Review.RecipeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Review.UserId" class="control-label"></label>
+                <input asp-for="Review.UserId" class="form-control" />
+                <span asp-validation-for="Review.UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="container py-5">
+    <h6>Homeowners reviews</h6>
+    <h2 class="fw-bold display-4 mb-4">Our happy customers</h2>
+
+    <div class="swiper testimonial-swiper mb-4">
+        <div class="swiper-wrapper">
+            @foreach (var item in Model?.Reviews ?? Enumerable.Empty<Review>())
+            {
+                <div class="swiper-slide testimonial-content p-5">
+                    <p>
+                        “@item.Comment.”
+                    </p>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <h5>@item.UserId</h5>
+                            <div class="d-flex">
+                                <iconify-icon icon="ion:star" class="rate pe-1"></iconify-icon>
+                                <iconify-icon icon="ion:star" class="rate pe-1"></iconify-icon>
+                                <iconify-icon icon="ion:star" class="rate pe-1"></iconify-icon>
+                                <iconify-icon icon="ion:star" class="rate pe-1"></iconify-icon>
+                                <iconify-icon icon="ion:star" class="rate pe-1"></iconify-icon>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="swiper-pagination mb-5"></div>
+</div>
+
 
