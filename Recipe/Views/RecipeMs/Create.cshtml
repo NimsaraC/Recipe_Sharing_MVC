@@ -1,4 +1,5 @@
-﻿@model Recipe.Models.RecipeM
+﻿@using System.Security.Claims
+@model Recipe.Models.RecipeM
 
 @{
     ViewData["Title"] = "Create";
@@ -13,7 +14,7 @@
             <hr />
             <form asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+                
                 <div class="form-group">
                     <label asp-for="Title" class="control-label">Title:</label>
                     <input asp-for="Title" class="form-control" />
@@ -62,10 +63,16 @@
             </form>
         </div>
     </div>
-
+    @if (ViewBag.Message != null)
+    {
+        <div style="color:green;" class="form-group">@ViewBag.Message</div>
+    }
     <div class="row mt-3">
         <div class="col-md-6 offset-md-3 text-center">
-            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            @{
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                <a asp-controller="Users" asp-action="Details" asp-route-id="@userId" class="btn btn-secondary">Back to Profile</a>
+            }
         </div>
     </div>
 </div>

@@ -96,7 +96,8 @@ namespace Recipe.Controllers
             {
                 _context.Add(recipeM);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ViewBag.Message = $"Successfully create the recipe.";
+                return View();
             }
             return View(recipeM);
         }
@@ -166,7 +167,8 @@ namespace Recipe.Controllers
             {
                 return NotFound();
             }
-
+            var userId = recipeM.UserId; // or however you get the UserId
+            ViewBag.UserId = userId;
             return View(recipeM);
         }
 
@@ -182,7 +184,8 @@ namespace Recipe.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            ViewBag.Message = $"Item Deleted Successfully";
+            return View();
         }
 
         private bool RecipeMExists(int id)

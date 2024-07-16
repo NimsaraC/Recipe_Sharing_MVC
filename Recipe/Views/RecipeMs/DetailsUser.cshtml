@@ -34,6 +34,7 @@
             <div>
                 <a asp-action="Edit" asp-route-id="@Model.RecipeM.Id" class="btn btn-primary">Edit</a>
                 <a asp-controller="Users" asp-action="Details" asp-route-id="@Model.RecipeM.UserId" class="btn btn-secondary">Back to List</a>
+                <a asp-action="Delete" asp-route-id="@Model.RecipeM.Id" class="btn btn-danger">Delete</a>
             </div>
         </div>
 

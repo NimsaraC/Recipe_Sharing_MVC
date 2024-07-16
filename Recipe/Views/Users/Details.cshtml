@@ -32,7 +32,7 @@
                     </dl>
                     <div class="text-center">
                         <a asp-action="Edit" asp-route-id="@Model?.User.Id" class="btn btn-primary">Edit</a>
-                        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                        <a asp-controller="RecipeMs" asp-action="Index" class="btn btn-secondary">Back to Home</a>
                         <a asp-controller="RecipeMs" asp-action="Create" class="btn btn-success">Add Recipe</a> <!-- Add this button -->
                         <a asp-action="Logout" class="btn btn-danger">Logout</a> <!-- Add logout link -->
                     </div>

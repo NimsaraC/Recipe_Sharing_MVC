@@ -116,6 +116,7 @@ namespace Recipe.Controllers
                 else
                 {
                     ModelState.AddModelError("", "Email or Password is not correct.");
+                    ViewBag.Message = $"Email or Password is not correct.";
                 }
             }
             return View();
@@ -141,6 +142,7 @@ namespace Recipe.Controllers
             {
                 return NotFound();
             }
+
             return View(user);
         }
 
@@ -160,6 +162,7 @@ namespace Recipe.Controllers
                 {
                     _context.Update(user);
                     await _context.SaveChangesAsync();
+                    ViewBag.Message = $"Successfully edited the recipe.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -172,7 +175,7 @@ namespace Recipe.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return View();
             }
             return View(user);
         }

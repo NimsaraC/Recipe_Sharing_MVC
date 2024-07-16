@@ -1,4 +1,5 @@
-﻿@model Recipe.Models.RecipeM
+﻿@using System.Security.Claims
+@model Recipe.Models.RecipeM
 
 @{
     ViewData["Title"] = "Delete";
@@ -11,6 +12,10 @@
         <div class="col-md-6 offset-md-3">
             <h3 class="text-center">Are you sure you want to delete this recipe?</h3>
             <hr />
+            @if (ViewBag.Message != null)
+                {
+                    <div style="color:green;" class="form-group">@ViewBag.Message</div>
+                }
             <div>
                 <h4>Recipe Details</h4>
                 <dl class="row">
@@ -39,9 +44,15 @@
                 <form asp-action="Delete" class="text-center mt-4">
                     <input type="hidden" asp-for="Id" />
                     <button type="submit" class="btn btn-danger">Delete</button> |
-                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                    @{
+                        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                        <a asp-controller="Users" asp-action="Details" asp-route-id="@userId" class="btn btn-secondary">Back to Profile</a>
+                    }
+                    
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+

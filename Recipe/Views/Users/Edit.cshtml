@@ -1,4 +1,5 @@
-﻿@model Recipe.Models.User
+﻿@using System.Security.Claims
+@model Recipe.Models.User
 
 @{
     ViewData["Title"] = "Edit";
@@ -13,7 +14,10 @@
             <form asp-action="Edit">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Id" />
-
+                @if (ViewBag.Message != null)
+                {
+                    <div style="color:green;" class="form-group">@ViewBag.Message</div>
+                }
                 <div class="form-group">
                     <label asp-for="Name" class="control-label">Name</label>
                     <input asp-for="Name" class="form-control" />
@@ -52,7 +56,7 @@
 
                 <div class="form-group text-center">
                     <button type="submit" class="btn btn-primary">Save</button>
-                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                    <a asp-controller="Users" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Back to Profile</a>
                 </div>
             </form>
         </div>
