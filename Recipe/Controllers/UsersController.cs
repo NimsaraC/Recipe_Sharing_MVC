@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -24,14 +29,13 @@ namespace Recipe.Controllers
             return View(await _context.Users.ToListAsync());
         }
 
-        // GET: Users/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var recipe = GetRecipeIdAsync(id);
 
             var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -40,41 +44,87 @@ namespace Recipe.Controllers
                 return NotFound();
             }
 
+            var recipes = await GetRecipesByUserIdAsync(id);
+
             var userDashboard = new UserDash
             {
                 User = user,
-                recipeMs = recipe
+                recipeMs = recipes
             };
 
             return View(userDashboard);
         }
 
-
-        public IEnumerable<RecipeM> GetRecipeIdAsync(int? id)
+        private async Task<IEnumerable<RecipeM>> GetRecipesByUserIdAsync(int? userId)
         {
-            return _context.Recipes.Where(r => r.UserId == id).ToList();
+            return await _context.Recipes.Where(r => r.UserId == userId).ToListAsync();
         }
 
-        // GET: Users/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Email,Password,Bio,Phone,IsActive")] User user)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Add(user);
+                    await _context.SaveChangesAsync();
+                    ModelState.Clear();
+                    ViewBag.Message = $"{user.Name} registered successfully. Please log in.";
+                }
+                catch (DbUpdateException)
+                {
+                    ModelState.AddModelError("", "Please enter a unique email and password.");
+                    return View(user);
+                }
+                return View();
             }
             return View(user);
+        }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(string email, string password)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == email && x.Password == password);
+                if (user != null)
+                {
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, user.Email),
+                        new Claim("Name", user.Name),
+                        new Claim(ClaimTypes.Role, "User"),
+                    };
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+                    return RedirectToAction("Details", "Users", new { area = "", id = user.Id });
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Email or Password is not correct.");
+                }
+            }
+            return View();
+        }
+
+
+        public async Task<IActionResult> LogOut()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index");
         }
 
         // GET: Users/Edit/5
@@ -94,8 +144,6 @@ namespace Recipe.Controllers
         }
 
         // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Password,Bio,Phone,IsActive")] User user)
