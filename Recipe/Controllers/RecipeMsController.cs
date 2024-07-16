@@ -49,6 +49,30 @@ namespace Recipe.Controllers
             return View(viewModel);
         }
 
+        public async Task<IActionResult> DetailsUser(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var review = GetReviewIdAsync(id);
+
+            var recipeM = await _context.Recipes.FirstOrDefaultAsync(m => m.Id == id);
+            if (recipeM == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new RecipeDetails
+            {
+                RecipeM = recipeM,
+                Reviews = review,
+                Review = new Review { RecipeId = recipeM.Id }
+            };
+
+            return View(viewModel);
+        }
+
         public IEnumerable<Review> GetReviewIdAsync(int? id)
         {
             return _context.Reviews.Where(r => r.RecipeId == id).ToList();

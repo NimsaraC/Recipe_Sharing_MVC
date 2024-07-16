@@ -4,47 +4,32 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1 class="text-center mt-5">Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="container mt-4">
+    <div class="row">
 
-<section class="best-receipe-area">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="section-heading">
-                    <h3>The best Receipies</h3>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-
-            @foreach (var item in Model)
-            {
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="single-best-receipe-area mb-30">
-                        <img src="img/bg-img/r1.jpg" alt="">
-                        <div class="receipe-content">
-                            <a href="receipe-post.html">
-                                <h5>@item.Title</h5>
-                            </a>
-                            <div>
-                                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                            </div>
-                            <div class="ratings">
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star-o" aria-hidden="true"></i>
-                            </div>
+        @foreach (var item in Model)
+        {
+            <div class="col-12 col-sm-6 col-lg-4 mb-4">
+                <div class="card recipe-card">
+                    <img class="card-img-top" src="img/bg-img/r1.jpg" alt="Recipe Image">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Title</h5>
+                        <p class="card-text">
+                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        </p>
+                        <div class="ratings">
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star-o" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>
-            }
-        </div>
+            </div>
+        }
+
     </div>
-</section>
+</div>

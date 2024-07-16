@@ -103,6 +103,7 @@ namespace Recipe.Controllers
                 {
                     var claims = new List<Claim>
                     {
+                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                         new Claim(ClaimTypes.Name, user.Email),
                         new Claim("Name", user.Name),
                         new Claim(ClaimTypes.Role, "User"),
@@ -124,7 +125,7 @@ namespace Recipe.Controllers
         public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Users/Edit/5

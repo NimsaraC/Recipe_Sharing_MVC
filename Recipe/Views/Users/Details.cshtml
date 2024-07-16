@@ -4,91 +4,74 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1 class="text-center mt-5">User Details</h1>
+<hr />
 
-<div>
-    <h4>User</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User.Password)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Password)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User.Bio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Bio)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User.Phone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Phone)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User.IsActive)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.IsActive)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.User.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">User Information</h4>
+                    <hr />
+                    <dl class="row">
+                        <dt class="col-sm-3">Name:</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.User.Name)</dd>
 
-<section class="best-receipe-area">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="section-heading">
-                    <h3>The best Receipies</h3>
+                        <dt class="col-sm-3">Email:</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.User.Email)</dd>
+
+                        <dt class="col-sm-3">Bio:</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.User.Bio)</dd>
+
+                        <dt class="col-sm-3">Phone:</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.User.Phone)</dd>
+
+                        <dt class="col-sm-3">Active:</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.User.IsActive)</dd>
+                    </dl>
+                    <div class="text-center">
+                        <a asp-action="Edit" asp-route-id="@Model?.User.Id" class="btn btn-primary">Edit</a>
+                        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                        <a asp-controller="RecipeMs" asp-action="Create" class="btn btn-success">Add Recipe</a> <!-- Add this button -->
+                        <a asp-action="Logout" class="btn btn-danger">Logout</a> <!-- Add logout link -->
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="row">
+    <hr />
 
-            @foreach (var item in Model?.recipeMs ?? Enumerable.Empty<RecipeM>())
-            {
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="single-best-receipe-area mb-30">
-                        <img src="img/bg-img/r1.jpg" alt="">
-                        <div class="receipe-content">
-                            <a href="receipe-post.html">
-                                <h5>@item.Title</h5>
-                            </a>
-                            <div>
-                                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                            </div>
-                            <div class="ratings">
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star-o" aria-hidden="true"></i>
-                            </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="section-heading">
+                <h3>The Best Recipes</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        @foreach (var item in Model?.recipeMs ?? Enumerable.Empty<RecipeM>())
+        {
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="card mb-4">
+                    <img src="img/bg-img/r1.jpg" class="card-img-top" alt="">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Title</h5>
+                        <div class="card-text">
+                            <a asp-controller="RecipeMs" asp-action="DetailsUser" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+                        </div>
+                        <div class="ratings mt-2">
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star-o" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>
-            }
-        </div>
+            </div>
+        }
     </div>
-</section>
-
+</div>

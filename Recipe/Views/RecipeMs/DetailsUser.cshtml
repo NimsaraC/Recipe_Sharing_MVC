@@ -1,7 +1,7 @@
 ﻿@model Recipe.Models.RecipeDetails
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "DetailsUser";
 }
 
 <h1 class="text-center mt-5">Details</h1>
@@ -32,7 +32,8 @@
             </dl>
 
             <div>
-                <a asp-action="Index" class="btn btn-secondary">Back to Home</a>
+                <a asp-action="Edit" asp-route-id="@Model.RecipeM.Id" class="btn btn-primary">Edit</a>
+                <a asp-controller="Users" asp-action="Details" asp-route-id="@Model.RecipeM.UserId" class="btn btn-secondary">Back to List</a>
             </div>
         </div>
 
