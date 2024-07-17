@@ -10,7 +10,7 @@
 <div class="container mt-4">
     <div class="row">
         <div class="col-md-6 offset-md-3">
-            <div class="card">
+            <div class="card shadow">
                 <div class="card-body">
                     <h4 class="card-title">User Information</h4>
                     <hr />
@@ -30,11 +30,11 @@
                         <dt class="col-sm-3">Active:</dt>
                         <dd class="col-sm-9">@Html.DisplayFor(model => model.User.IsActive)</dd>
                     </dl>
-                    <div class="text-center">
-                        <a asp-action="Edit" asp-route-id="@Model?.User.Id" class="btn btn-primary">Edit</a>
-                        <a asp-controller="RecipeMs" asp-action="Index" class="btn btn-secondary">Back to Home</a>
-                        <a asp-controller="RecipeMs" asp-action="Create" class="btn btn-success">Add Recipe</a> <!-- Add this button -->
-                        <a asp-action="Logout" class="btn btn-danger">Logout</a> <!-- Add logout link -->
+                    <div class="text-center mt-4">
+                        <a asp-action="Edit" asp-route-id="@Model?.User.Id" class="btn btn-primary">Edit Profile</a>
+                        <a asp-controller="RecipeMs" asp-action="Index" class="btn btn-secondary ms-2">Back to Home</a>
+                        <a asp-controller="RecipeMs" asp-action="Create" class="btn btn-success ms-2">Add Recipe</a>
+                        <a asp-action="Logout" class="btn btn-danger ms-2">Logout</a>
                     </div>
                 </div>
             </div>
@@ -55,12 +55,12 @@
         @foreach (var item in Model?.recipeMs ?? Enumerable.Empty<RecipeM>())
         {
             <div class="col-12 col-sm-6 col-lg-4">
-                <div class="card mb-4">
-                    <img src="img/bg-img/r1.jpg" class="card-img-top" alt="">
+                <div class="card mb-4 shadow">
+                    <img src="img/bg-img/r1.jpg" class="card-img-top" alt="Recipe Image">
                     <div class="card-body">
                         <h5 class="card-title">@item.Title</h5>
                         <div class="card-text">
-                            <a asp-controller="RecipeMs" asp-action="DetailsUser" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+                            <a asp-controller="RecipeMs" asp-action="DetailsUser" asp-route-id="@item.Id" class="btn btn-primary">View Details</a>
                         </div>
                         <div class="ratings mt-2">
                             <i class="fa fa-star" aria-hidden="true"></i>

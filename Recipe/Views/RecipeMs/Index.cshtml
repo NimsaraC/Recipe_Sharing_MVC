@@ -1,14 +1,13 @@
 ﻿@model IEnumerable<Recipe.Models.RecipeM>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "RecipeBook";
 }
 
-<h1 class="text-center mt-5">Index</h1>
+<h1 class="text-center mt-5">Welcome to RecipeBook</h1>
 
 <div class="container mt-4">
     <div class="row">
-
         @foreach (var item in Model)
         {
             <div class="col-12 col-sm-6 col-lg-4 mb-4">
@@ -16,20 +15,63 @@
                     <img class="card-img-top" src="img/bg-img/r1.jpg" alt="Recipe Image">
                     <div class="card-body">
                         <h5 class="card-title">@item.Title</h5>
+                        <p class="card-text">@item.Description</p>
                         <p class="card-text">
                             <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">Details</a>
                         </p>
                         <div class="ratings">
-                            <i class="fa fa-star" aria-hidden="true"></i>
-                            <i class="fa fa-star" aria-hidden="true"></i>
-                            <i class="fa fa-star" aria-hidden="true"></i>
-                            <i class="fa fa-star" aria-hidden="true"></i>
-                            <i class="fa fa-star-o" aria-hidden="true"></i>
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                if (i < item.Id)
+                                {
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                }
+                                else
+                                {
+                                    <i class="fa fa-star-o" aria-hidden="true"></i>
+                                }
+                            }
                         </div>
                     </div>
                 </div>
             </div>
         }
-
     </div>
 </div>
+
+<style>
+    .recipe-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    .recipe-card:hover {
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+    .card-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .card-text {
+        margin-bottom: 15px;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+    .ratings {
+        color: #f39c12; /* orange color */
+        font-size: 18px;
+        margin-top: 10px;
+    }
+</style>
