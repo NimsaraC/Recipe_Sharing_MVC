@@ -26,9 +26,6 @@
 
                         <dt class="col-sm-3">Phone:</dt>
                         <dd class="col-sm-9">@Html.DisplayFor(model => model.User.Phone)</dd>
-
-                        <dt class="col-sm-3">Active:</dt>
-                        <dd class="col-sm-9">@Html.DisplayFor(model => model.User.IsActive)</dd>
                     </dl>
                     <div class="text-center mt-4">
                         <a asp-action="Edit" asp-route-id="@Model?.User.Id" class="btn btn-primary">Edit Profile</a>
@@ -56,7 +53,7 @@
         {
             <div class="col-12 col-sm-6 col-lg-4">
                 <div class="card mb-4 shadow">
-                    <img src="img/bg-img/r1.jpg" class="card-img-top" alt="Recipe Image">
+                    <img src="/uploads/@item.ImageFileName" class="card-img-top" alt="Recipe Image">
                     <div class="card-body">
                         <h5 class="card-title">@item.Title</h5>
                         <div class="card-text">

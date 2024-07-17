@@ -13,10 +13,12 @@ namespace Recipe.Controllers
     public class RecipeMsController : Controller
     {
         private readonly RecipeDBContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public RecipeMsController(RecipeDBContext context)
+        public RecipeMsController(RecipeDBContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: RecipeMs
@@ -91,17 +93,53 @@ namespace Recipe.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Ingredients,Steps,CookingTime,Category,UserId")] RecipeM recipeM)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,Ingredients,Steps,CookingTime,Category,UserId,ImageFileName")] RecipeDTO recipeM)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(recipeM);
-                await _context.SaveChangesAsync();
-                ViewBag.Message = $"Successfully create the recipe.";
-                return View();
+                if (recipeM.ImageFileName != null && recipeM.ImageFileName.Length > 0)
+                {
+                    // Handle file upload and save to disk
+                    string newFilename = DateTime.Now.ToString("yyyyMMddHHmmssfff") + Path.GetExtension(recipeM.ImageFileName.FileName);
+                    string imagefullPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", newFilename);
+
+                    using (var stream = new FileStream(imagefullPath, FileMode.Create))
+                    {
+                        await recipeM.ImageFileName.CopyToAsync(stream);
+                    }
+
+                    // Create RecipeM entity to save in database
+                    var recipeEntity = new RecipeM
+                    {
+                        Title = recipeM.Title,
+                        Description = recipeM.Description,
+                        Ingredients = recipeM.Ingredients,
+                        Steps = recipeM.Steps,
+                        CookingTime = recipeM.CookingTime,
+                        Category = recipeM.Category,
+                        UserId = recipeM.UserId,
+                        ImageFileName = newFilename
+                    };
+
+                    _context.Add(recipeEntity);
+                    await _context.SaveChangesAsync();
+
+                    ViewBag.Message = $"Successfully created the recipe.";
+                    return View();
+                }
+                else
+                {
+                    // Handle case where ImageFileName is null or empty
+                    ModelState.AddModelError("ImageFileName", "Please choose a file for the recipe image.");
+                }
             }
+
+            // If ModelState is invalid, return the view with the model to display validation errors
             return View(recipeM);
         }
+
+
+
 
         // GET: RecipeMs/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -196,7 +234,7 @@ namespace Recipe.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateReview([Bind("Id,Comment,RecipeId,UserId")] Review review)
+        public async Task<IActionResult> CreateReview([Bind("Id,Comment,RecipeId,UserName")] Review review)
         {
             if (ModelState.IsValid)
             {
@@ -205,7 +243,6 @@ namespace Recipe.Controllers
                 return RedirectToAction("Details", new { id = review.RecipeId });
             }
 
-            // If the model state is invalid, re-fetch the associated recipe and return to the details view with the original view model
             var recipeM = await _context.Recipes.FirstOrDefaultAsync(m => m.Id == review.RecipeId);
             if (recipeM == null)
             {

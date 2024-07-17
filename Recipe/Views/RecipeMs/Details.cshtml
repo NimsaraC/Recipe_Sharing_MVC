@@ -4,14 +4,15 @@
     ViewData["Title"] = "Details";
 }
 
-<h1 class="text-center mt-5">Details</h1>
+<h1 class="text-center mt-5">@Model.RecipeM.Title</h1>
 
 <div class="container mt-4">
     <div class="row">
-        <div class="col-md-8">
-            <h4>@Html.DisplayNameFor(model => model.RecipeM.Title)</h4>
+        <div class="col-md-12">
+            <h4 class="text-primary">@Html.DisplayNameFor(model => model.RecipeM.Title)</h4>
             <hr />
-            <dl class="row">
+            <img src="/uploads/@Model.RecipeM.ImageFileName" class="card-img-top rounded recipe-image" alt="Recipe Image">
+            <dl class="row mt-3">
                 <dt class="col-sm-3">Description:</dt>
                 <dd class="col-sm-9">@Html.DisplayFor(model => model.RecipeM.Description)</dd>
 
@@ -31,52 +32,58 @@
                 <dd class="col-sm-9">@Html.DisplayFor(model => model.RecipeM.UserId)</dd>
             </dl>
 
-            <div>
+            <div class="mt-4">
                 <a asp-action="Index" class="btn btn-secondary">Back to Home</a>
             </div>
-        </div>
-
-        <div class="col-md-4 mt-4 mt-md-0">
-            <h4>Create Review</h4>
-            <hr />
-            <form asp-action="CreateReview">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                <div class="form-group">
-                    <label asp-for="Review.Comment" class="control-label">Comment:</label>
-                    <textarea rows="5" class="form-control" asp-for="Review.Comment"></textarea>
-                    <span asp-validation-for="Review.Comment" class="text-danger"></span>
-                </div>
-
-                <input asp-for="Review.RecipeId" class="form-control" type="hidden" />
-
-                <div class="form-group">
-                    <label asp-for="Review.UserId" class="control-label">User ID:</label>
-                    <input asp-for="Review.UserId" class="form-control" />
-                    <span asp-validation-for="Review.UserId" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Create</button>
-                </div>
-            </form>
         </div>
     </div>
 
     <div class="row mt-5">
         <div class="col-md-12">
-            <h2 class="fw-bold mb-4">Customer Reviews</h2>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="text-primary">Create Review</h4>
+                    <hr />
+                    <form asp-action="CreateReview">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Review.Comment" class="control-label">Comment:</label>
+                            <textarea rows="5" class="form-control" asp-for="Review.Comment"></textarea>
+                            <span asp-validation-for="Review.Comment" class="text-danger"></span>
+                        </div>
+
+                        <input asp-for="Review.RecipeId" class="form-control" type="hidden" />
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Review.UserName" class="control-label">User Name:</label>
+                            <input asp-for="Review.UserName" class="form-control" />
+                            <span asp-validation-for="Review.UserName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h2 class="fw-bold mb-4 text-primary">Customer Reviews</h2>
 
             <div class="swiper testimonial-swiper">
                 <div class="swiper-wrapper">
                     @foreach (var item in Model.Reviews ?? Enumerable.Empty<Review>())
                     {
-                        <div class="swiper-slide testimonial-content p-4">
-                            <p>
+                        <div class="swiper-slide testimonial-content p-4 shadow-sm rounded">
+                            <p class="fst-italic">
                                 "@item.Comment"
                             </p>
-                            <div class="d-flex align-items-center">
-                                <h5 class="me-3">@item.UserId</h5>
+                            <div class="d-flex align-items-center mt-3">
+                                <h5 class="me-3">@item.UserName</h5>
                                 <div class="d-flex">
                                     <i class="bi bi-star-fill text-warning"></i>
                                     <i class="bi bi-star-fill text-warning"></i>
@@ -88,7 +95,7 @@
                         </div>
                     }
                 </div>
-                <div class="swiper-pagination"></div>
+                <div class="swiper-pagination mt-3"></div>
             </div>
         </div>
     </div>
@@ -107,3 +114,27 @@
         });
     </script>
 }
+
+<style>
+    .recipe-image {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+    }
+
+    .testimonial-content {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+        .testimonial-content p {
+            font-size: 1.1rem;
+            color: #6c757d;
+        }
+
+    .swiper-pagination-bullet {
+        background: #007bff;
+    }
+
+</style>
